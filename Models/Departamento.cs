@@ -20,5 +20,15 @@ namespace vendasWebMvc.Models
             Id = id;
             Nome = nome;
         }
+
+        public void AdicionaVendedor(Vendedor vendedor)
+        {
+            Vendedores.Add(vendedor);
+        }
+
+        public double TotalDeVendasDep(DateTime inicial, DateTime final)
+        {
+            return Vendedores.Sum(vendedor => vendedor.TotalDeVendas(inicial, final));
+        }
     }
 }

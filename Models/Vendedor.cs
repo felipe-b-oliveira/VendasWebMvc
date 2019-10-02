@@ -28,5 +28,20 @@ namespace vendasWebMvc.Models
             SalarioBase = salarioBase;
             Departamento = departamento;
         }
+
+        public void AdicionarVendas (RegistroDeVendas rv)
+        {
+            Vendas.Add(rv);
+        }
+
+        public void RemoverVendas (RegistroDeVendas rv)
+        {
+            Vendas.Remove(rv);
+        }
+
+        public double TotalDeVendas(DateTime inicial, DateTime final)
+        {
+            return Vendas.Where(rv => rv.Data >= inicial && rv.Data <= final).Sum(rv => rv.Quantidade);
+        }
     }
 }
