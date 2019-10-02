@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using vendasWebMvc.Models;
+using vendasWebMvc.Data;
 
 namespace vendasWebMvc
 {
@@ -39,14 +40,17 @@ namespace vendasWebMvc
             services.AddDbContext<vendasWebMvcContext>(options =>
                      options.UseMySql(Configuration.GetConnectionString("vendasWebMvcContext"), 
                         builder => builder.MigrationsAssembly("vendasWebMvc")));
+
+            services.AddScoped<PopularBaseService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, PopularBaseService popularBaseService)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                popularBaseService.Popular();
             }
             else
             {
