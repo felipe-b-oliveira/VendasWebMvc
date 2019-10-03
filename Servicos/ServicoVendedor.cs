@@ -6,13 +6,13 @@ using vendasWebMvc.Models;
 
 namespace vendasWebMvc.Servicos
 {
-    public class VendedorServico
+    public class ServicoVendedor
     {
         //Impedir que a dependência seja alterada
         private readonly vendasWebMvcContext _context;
 
         //Dependência para o DbContext
-        public VendedorServico (vendasWebMvcContext context)
+        public ServicoVendedor (vendasWebMvcContext context)
         {
             _context = context;
         }
@@ -25,7 +25,6 @@ namespace vendasWebMvc.Servicos
 
         public void Insert(Vendedor obj)
         {
-            obj.Departamento = _context.Departamento.First();
             _context.Add(obj);
             _context.SaveChanges();
         }
