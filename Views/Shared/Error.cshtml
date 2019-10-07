@@ -6,8 +6,8 @@
     ViewData["Title"] = "Erro";
 }
 
-<h1 class="text-danger">Erro.</h1>
-<h2 class="text-danger">Ocorreu um erro ao processar sua requisição.</h2>
+<h1 class="text-danger">@ViewData["Title"]</h1>
+<h2 class="text-danger">@Model.Message</h2>
 
 @if (Model.ShowRequestId)
 {
@@ -16,10 +16,3 @@
     </p>
 }
 
-<h3>Modo de Desenvolvimento</h3>
-<p>
-    Mudando para <strong>Development</strong> o ambiente irá exibir informações mais detalhadas sobre o erro que ococrreu.
-</p>
-<p>
-    <strong>O ambiente de Desenvolvimento não deve ser ativado em aplicações implanatadas</strong>, uma vez que pode resultar na exibição das sensíveis informações das exceções para os usuários finais. Para a depuração local, o ambiente de desenvolvimento pode ser ativido configurando a variável de ambiente <strong>ASPNETCORE_ENVIRONMENT</strong> para <strong>Development</strong>, e reiniciando a aplicação.
-</p>
