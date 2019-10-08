@@ -8,13 +8,13 @@ using vendasWebMvc.Services.Exceptions;
 
 namespace vendasWebMvc.Services
 {
-    public class ServicoVendedor
+    public class VendedorService
     {
         //Impedir que a dependência seja alterada
         private readonly VendasWebMvcContext _context;
 
         // Dependência para o DbContext
-        public ServicoVendedor(VendasWebMvcContext context)
+        public VendedorService(VendasWebMvcContext context)
         {
             _context = context;
         }

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace vendasWebMvc.Services
 {
-    public class ServicoDepartamento
+    public class DepartamentoService
     {
         private readonly VendasWebMvcContext _context;
 
-        public ServicoDepartamento(VendasWebMvcContext context)
+        public DepartamentoService(VendasWebMvcContext context)
         {
             _context = context;
         }
@@ -23,7 +23,9 @@ namespace vendasWebMvc.Services
             // A expressao link só executada pela chamada ToList
             // O ToList normalmente é assíncrona
             // O ToList Async é pertecente ao Entity Framework
-            return await _context.Departamento.OrderBy(x => x.Nome).ToListAsync();
+
+            var deptos = await _context.Departamento.ToListAsync();
+            return deptos;
         }
     }
 }
