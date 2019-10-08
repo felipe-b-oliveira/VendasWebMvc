@@ -13,45 +13,66 @@ namespace vendasWebMvc.Services
         //Impedir que a dependência seja alterada
         private readonly VendasWebMvcContext _context;
 
-        //Dependência para o DbContext
+        // Dependência para o DbContext
         public ServicoVendedor(VendasWebMvcContext context)
         {
             _context = context;
         }
 
-        //Retorna uma lista com todos os vendedores do banco de dados
-        public List<Vendedor> FindAll()
+        // Retorna uma lista com todos os vendedores do banco de dados
+        // Operacao assincrona
+        public async Task<List<Vendedor>> FindAllAsync()
         {
-            return _context.Vendedor.OrderBy(x => x.Nome).ToList();
+            return await _context.Vendedor.OrderBy(x => x.Nome).ToListAsync();
         }
 
-        public void Insert(Vendedor obj)
+        // Operacao assincrona
+        public async Task InsertAsync(Vendedor obj)
         {
+            // Operacao realizada em memoria
             _context.Add(obj);
-            _context.SaveChanges();
-        }
-        public Vendedor FindById(int id)
-        {
-            return _context.Vendedor.Include(obj => obj.Departamento).FirstOrDefault(obj => obj.Id == id);
+
+            // Operacao realizada no banco
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(int id)
+        // Operacao assincrona
+        public async Task<Vendedor> FindByIdAsync(int id)
         {
-            var obj = _context.Vendedor.Find(id);
+            return await _context.Vendedor.Include(obj => obj.Departamento).FirstOrDefaultAsync(obj => obj.Id == id);
+        }
+
+        // Operacao assincrona
+        public async Task RemoveAsync(int id)
+        {
+            // Operacao realizada no banco
+            var obj = await _context.Vendedor.FindAsync(id);
+
+            // Operacao realizada em memoria
             _context.Vendedor.Remove(obj);
-            _context.SaveChanges();
+
+            // Operacao realizada no banco
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(Vendedor obj)
+        // Operacao assincrona
+        public async Task UpdateAsync(Vendedor obj)
         {
-            if (!_context.Vendedor.Any(x => x.Id == obj.Id))
+            // Operacao realizada no banco
+            // Código movido de dentro fo If para fora do mesmo e atribuido a variável booleana hasAny
+            bool hasAny = await _context.Vendedor.AnyAsync(x => x.Id == obj.Id);
+                        
+            if (!hasAny)
             {
                 throw new NotFoundException("Id não encontrado");
             }
             try
             {
+                // Operacao realizada em memoria
                 _context.Update(obj);
-                _context.SaveChanges();
+
+                // Operacao realizada no banco
+                await _context.SaveChangesAsync();
             }
             catch(DbUpdateConcurrencyException e)
             {

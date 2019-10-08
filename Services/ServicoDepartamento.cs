@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using vendasWebMvc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace vendasWebMvc.Services
 {
@@ -15,9 +16,14 @@ namespace vendasWebMvc.Services
             _context = context;
         }
 
-        public List<Departamento> FindAll()
+        // Operacao assincrona
+        // Retorna um Task de List<Departamento>
+        public async Task<List<Departamento>> FindAllAsync()
         {
-            return _context.Departamento.OrderBy(x => x.Nome).ToList();
+            // A expressao link só executada pela chamada ToList
+            // O ToList normalmente é assíncrona
+            // O ToList Async é pertecente ao Entity Framework
+            return await _context.Departamento.OrderBy(x => x.Nome).ToListAsync();
         }
     }
 }
