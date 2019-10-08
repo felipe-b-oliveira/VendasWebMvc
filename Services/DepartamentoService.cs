@@ -24,8 +24,13 @@ namespace vendasWebMvc.Services
             // O ToList normalmente é assíncrona
             // O ToList Async é pertecente ao Entity Framework
 
-            var deptos = await _context.Departamento.ToListAsync();
+            var deptos = await _context.Departamento.OrderBy(d => d.Nome).ToListAsync();
             return deptos;
+        }
+
+        public async Task<Departamento> FindByIdAsync(int id)
+        {
+            return await _context.Departamento.FirstOrDefaultAsync(obj => obj.Id == id);
         }
     }
 }

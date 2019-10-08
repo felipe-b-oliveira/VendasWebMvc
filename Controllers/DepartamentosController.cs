@@ -6,18 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using vendasWebMvc.Models;
+using vendasWebMvc.Services;
 
 namespace vendasWebMvc.Controllers
 {
     public class DepartamentosController : Controller
     {
         // Dependencia da classe de banco
-        private readonly VendasWebMvcContext _context;
+        private readonly DepartamentoService _departamentoService;
 
         // Controle para injecao de dependência
-        public DepartamentosController(VendasWebMvcContext context)
+        public DepartamentosController(DepartamentoService departamentoService)
         {
-            _context = context;
+            _departamentoService = departamentoService;
         }
 
         // GET: Departamentos
@@ -25,11 +26,11 @@ namespace vendasWebMvc.Controllers
         {
             // A classe Departamento não está configurada para os serviços pois foi a primeira do exercício
             // Tentei configurar a mesma, mas parei na parte do argumento Departamento implementado na classe Vendedor
-            var list = await _context.Departamento.OrderBy(z => z.Nome).ToListAsync();
+            var list = await _departamentoService.FindAllAsync();
             return View(list);
         }
 
-        // GET: Departamentos/Details/5
+        // GET: Departamentos/Details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,14 +38,13 @@ namespace vendasWebMvc.Controllers
                 return NotFound();
             }
 
-            var departamento = await _context.Departamento
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (departamento == null)
+            var obj = await _departamentoService.FindByIdAsync(id.Value);
+            if (obj == null)
             {
                 return NotFound();
             }
 
-            return View(departamento);
+            return View(obj);
         }
 
         // GET: Departamentos/Create
