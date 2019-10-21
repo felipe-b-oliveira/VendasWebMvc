@@ -7,25 +7,33 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using vendasWebMvc.Models;
 using vendasWebMvc.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace vendasWebMvc.Controllers
 {
     public class DepartamentosController : Controller
     {
-        // Dependencia da classe de banco
         private readonly DepartamentoService _departamentoService;
 
-        // Controle para injecao de dependência
-        public DepartamentosController(DepartamentoService departamentoService)
+        // Dependencia da classe de banco
+        // private readonly IDepartamentoService _departamentoService;
+
+        //Controle para injecao de dependência
+        /*public DepartamentosController(IDepartamentoService departamentoservice)
         {
-            _departamentoService = departamentoService;
+            //_departamentoService = new DepartamentoService(new VendasWebMvcContext(new DbContextOptions<VendasWebMvcContext>())));
+
+            _departamentoService = departamentoservice;
+        }*/
+
+        public DepartamentosController(DepartamentoService servicoDepartamento)
+        {
+            _departamentoService = servicoDepartamento;
         }
 
         // GET: Departamentos
         public async Task<IActionResult> Index()
         {
-            // A classe Departamento não está configurada para os serviços pois foi a primeira do exercício
-            // Tentei configurar a mesma, mas parei na parte do argumento Departamento implementado na classe Vendedor
             var list = await _departamentoService.FindAllAsync();
             return View(list);
         }
@@ -58,10 +66,38 @@ namespace vendasWebMvc.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome")] Departamento departamento)
+        public async Task<IActionResult> Create(string nome, [Bind("Id,Nome")] Departamento departamento)
         {
-            await _departamentoService.InsertAsync(departamento);
-            return RedirectToAction(nameof(Index));
+            if(ModelState.IsValid)
+            {
+                if(_departamentoService.DepartamentoNomeExists(nome))
+                {
+                    ModelState.AddModelError("Nome", "Departamento existente");
+                    return View();
+                }
+                else
+                {
+                    await _departamentoService.InsertAsync(departamento);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            return RedirectToAction(nameof(Create));
+
+            /*if (_departamentoService.DepartamentoNomeExists(nome))
+            {
+                return RedirectToAction(nameof(Create));
+
+                
+            }
+            else
+            {
+                await _departamentoService.InsertAsync(departamento);
+                return RedirectToAction(nameof(Index));
+            }*/
+
+            //return View(departamento);
+            //return RedirectToAction(nameof(Index));
         }
 
         // GET: Departamentos/Edit/5
@@ -140,6 +176,6 @@ namespace vendasWebMvc.Controllers
             await _departamentoService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
-        
+
     }
 }

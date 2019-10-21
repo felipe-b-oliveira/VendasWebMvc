@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using vendasWebMvc.Models;
 using vendasWebMvc.Data;
 using vendasWebMvc.Services;
+using vendasWebMvc.TestData;
+using vendasWebMvc.LogServices;
 
 namespace vendasWebMvc
 {
@@ -47,9 +49,20 @@ namespace vendasWebMvc
                         builder => builder.MigrationsAssembly("vendasWebMvc")));
 
             services.AddScoped<PopularBaseService>();
-            services.AddScoped<VendedorService>();
             services.AddScoped<DepartamentoService>();
+            services.AddScoped<VendedorService>();
             services.AddScoped<RegistroDeVendaService>();
+
+
+            //Implementação real
+            //services.AddScoped<IDepartamentoService, DepartamentoService>();
+
+            //Implementação com dados de teste
+            //services.AddScoped<IDepartamentoService, DepartamentoServiceTestData>();
+
+            //Implementação log
+            //services.AddScoped<IDepartamentoService, DepartamentoServiceLog>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
