@@ -17,16 +17,14 @@ namespace vendasWebMvc.Services
             _context = context;
         }
 
-        // Operacao assincrona
-        // Retorna um Task de List<Departamento>
+        // Operacao assincrona - Retorna um Task de List<Departamento>
         public async Task<List<Departamento>> FindAllAsync()
         {
-            // A expressao link só executada pela chamada ToList
-            // O ToList normalmente é assíncrona
-            // O ToList Async é pertecente ao Entity Framework
+            // A expressao link só é executada pela chamada ToList - O ToList normalmente é assíncrono
+            // O ToListAsync pertecente ao Entity Framework
 
-            var deptos = await _context.Departamento.OrderBy(d => d.Nome).ToListAsync();
-            return deptos;
+            return await _context.Departamento.OrderBy(d => d.Nome).ToListAsync();
+
         }
 
         // Operacao assincrona
@@ -84,5 +82,23 @@ namespace vendasWebMvc.Services
         {
             return _context.Departamento.Any(e => e.Id == id);
         }
+
+        public bool DepartamentoNomeExists(string nome)
+        {
+            return _context.Departamento.Any(d => d.Nome == nome);
+        }
     }
 }
+
+// Exemplo de Injeção de dependência ---
+/*public class DepartamentoService : IDepartamentoService
+{
+    Code...
+
+    public async Task<List<Departamento>> FindAllAsync()
+    {
+        var deptos = await _context.Departamento.OrderBy(d => d.Nome).ToListAsync();
+        return deptos;
+    }
+
+}*/
