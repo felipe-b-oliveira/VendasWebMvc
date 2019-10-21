@@ -56,7 +56,7 @@ namespace vendasWebMvc.Services
                 // Operacao realizada no banco
                 await _context.SaveChangesAsync();
             }
-            catch(DbUpdateException e)
+            catch(DbUpdateException)
             {
                 throw new IntegrityException("Não foi possível deletar o vendedor(a) porque há vendas atreladas a ele.");
             }
